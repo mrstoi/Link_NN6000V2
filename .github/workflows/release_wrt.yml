@@ -83,18 +83,7 @@ jobs:
           fi
 
       - name: Build Firmware
-        run: |
-          echo "::group::Build Start"
-          ./build.sh ${{ inputs.model }} 2>&1 | tee build.log
-          echo "::endgroup::"
-
-      - name: Upload Build Log
-        uses: actions/upload-artifact@v4.6.2
-        if: always()
-        with:
-          name: build-log
-          path: build.log
-          retention-days: 7
+        run: ./build.sh ${{ inputs.model }}
 
       - name: Get Kernel Verion
         run: |
@@ -127,7 +116,7 @@ jobs:
           echo "Kernel: ${{ env.KVER }}" >> release_body.txt
 
       - name: Release Firmware
-        uses: softprops/action-gh-release@v2.2.1
+        uses: softprops/action-gh-release@v2.5.0
         with:
           tag_name: ${{ env.BUILD_DATE }}_${{ inputs.model }}
           files: ./firmware/*.*

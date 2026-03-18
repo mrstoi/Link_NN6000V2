@@ -234,11 +234,7 @@ update_lucky() {
     fi
 
     echo "正在更新 lucky Makefile..."
-    echo "检测到的 lucky 补丁版本：$version"
-    local patch_file
-    patch_file=$(find "$BASE_PATH/patches" -name "lucky_*.tar.gz" -printf "%f\n" | head -n 1)
-    echo "使用的补丁文件：$patch_file"
-    local patch_line="\\t[ -f \$(TOPDIR)/../wrt_core/patches/${patch_file} ] && install -Dm644 \$(TOPDIR)/../wrt_core/patches/${patch_file} \$(PKG_BUILD_DIR)/\$(PKG_NAME)_\$(PKG_VERSION)_Linux_\$(LUCKY_ARCH).tar.gz"
+    local patch_line="\\t[ -f \$(TOPDIR)/../wrt_core/patches/lucky_${version}_Linux_\$(LUCKY_ARCH)_wanji.tar.gz ] && install -Dm644 \$(TOPDIR)/../wrt_core/patches/lucky_${version}_Linux_\$(LUCKY_ARCH)_wanji.tar.gz \$(PKG_BUILD_DIR)/\$(PKG_NAME)_\$(PKG_VERSION)_Linux_\$(LUCKY_ARCH).tar.gz"
 
     if grep -q "Build/Prepare" "$makefile_path"; then
         sed -i "/Build\\/Prepare/a\\$patch_line" "$makefile_path"
