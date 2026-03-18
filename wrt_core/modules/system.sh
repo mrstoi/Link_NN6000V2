@@ -625,12 +625,3 @@ install_libubox_cmake_patch() {
         return 1
     fi
 }
-
-configure_smartdns_adguardhome() {
-    echo "配置 SmartDNS + AdGuard Home..."
-    
-    # 安装 DNS 配置脚本到 uci-defaults
-    install -Dm755 "$BASE_PATH/patches/995_set_dns.sh" "$BUILD_DIR/package/base-files/files/etc/uci-defaults/995_set_dns.sh"
-    
-    echo "SmartDNS + AdGuard Home 配置已添加到固件"
-}
