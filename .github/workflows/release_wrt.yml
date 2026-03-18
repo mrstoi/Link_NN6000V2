@@ -89,7 +89,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Upload Build Log
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         if: always()
         with:
           name: build-log
@@ -127,7 +127,7 @@ jobs:
           echo "Kernel: ${{ env.KVER }}" >> release_body.txt
 
       - name: Release Firmware
-        uses: softprops/action-gh-release@v2.5.0
+        uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: ${{ env.BUILD_DATE }}_${{ inputs.model }}
           files: ./firmware/*.*
