@@ -15,7 +15,7 @@
 
 | 配置项 | 默认值 | 说明 |
 |--------|--------|------|
-| **LAN IP** | `192.168.10.1` | (wrt_core/patches/991_set_lanip.sh) |
+| **LAN IP** | `192.168.8.1` | (wrt_core/patches/991_set_lanip.sh) |
 | **WiFi 名称** | `500/5` | (wrt_core/patches/992_set-wifi-uci.sh) |
 | **WiFi 密码** | `147258369` | 无线密码 |
 | **WiFi 状态** | **禁用** | 首次启动需手动开启 |
@@ -40,6 +40,7 @@
 | **luci-app-hd-idle** | 硬盘休眠 |
 | **luci-app-p910nd** | USB 打印机共享 |
 | **luci-app-easytier** | EasyTier 虚拟组网 |
+| **luci-app-zerotier** | ZeroTier 虚拟组网 |
 | **luci-app-lucky** | 大鸡 |
 | **luci-app-oaf** | 应用行为过滤 |
 | **luci-app-ttyd** | 终端 |
