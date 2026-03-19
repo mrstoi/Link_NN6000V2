@@ -4,8 +4,8 @@
 # 注意：请修改下面的账号和密码为你的实际宽带账号密码
 # 如果不想使用自动配置，请删除此文件或留空账号密码
 
-PPPOE_USERNAME="087709514472"
-PPPOE_PASSWORD="514472"
+PPPOE_USERNAME="你的宽带账号"
+PPPOE_PASSWORD="你的宽带密码"
 
 # 只有当账号密码被修改后才配置
 if [ "$PPPOE_USERNAME" != "你的宽带账号" ] && [ "$PPPOE_PASSWORD" != "你的宽带密码" ]; then
