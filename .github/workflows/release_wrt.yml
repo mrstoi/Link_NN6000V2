@@ -17,6 +17,9 @@ env:
 
 jobs:
   build:
+    permissions:
+      actions: write
+      contents: write
     strategy:
       matrix:
         os: [ubuntu-24.04]
