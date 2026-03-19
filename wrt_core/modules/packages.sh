@@ -163,19 +163,6 @@ add_timecontrol() {
     fi
 }
 
-update_adguardhome() {
-    local adguardhome_dir="$BUILD_DIR/package/feeds/small8/luci-app-adguardhome"
-    local repo_url="https://github.com/ZqinKing/luci-app-adguardhome.git"
-
-    echo "正在更新 luci-app-adguardhome..."
-    rm -rf "$adguardhome_dir" 2>/dev/null
-
-    if ! git clone --depth 1 "$repo_url" "$adguardhome_dir"; then
-        echo "错误：从 $repo_url 克隆 luci-app-adguardhome 仓库失败" >&2
-        exit 1
-    fi
-}
-
 update_lucky() {
     local lucky_repo_url="https://github.com/gdy666/luci-app-lucky.git"
     local target_small8_dir="$BUILD_DIR/feeds/small8"
@@ -246,7 +233,7 @@ update_lucky() {
 }
 
 update_smartdns() {
-    local SMARTDNS_REPO="https://github.com/ZqinKing/openwrt-smartdns.git"
+    local SMARTDNS_REPO="https://github.com/pymumu/openwrt-smartdns.git"
     local SMARTDNS_DIR="$BUILD_DIR/feeds/packages/net/smartdns"
     local LUCI_APP_SMARTDNS_REPO="https://github.com/pymumu/luci-app-smartdns.git"
     local LUCI_APP_SMARTDNS_DIR="$BUILD_DIR/feeds/luci/applications/luci-app-smartdns"

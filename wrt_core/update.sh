@@ -88,7 +88,6 @@ main() {
     install_feeds
     fix_cups_libcups_avahi_depends
     fix_easytier_lua
-    update_adguardhome
     update_script_priority
     update_geoip
     fix_openssl_ktls
