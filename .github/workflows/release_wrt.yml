@@ -50,6 +50,7 @@ jobs:
       - name: Pre Clone
         run: |
           chmod +x ./wrt_core/pre_clone_action.sh
+          chmod +x ./wrt_core/update.sh
           chmod +x ./build.sh
           ./wrt_core/pre_clone_action.sh ${{ inputs.model }}
 
