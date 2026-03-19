@@ -23,6 +23,11 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Disable snapd refresh
+        run: |
+          sudo systemctl stop snapd
+          sudo systemctl disable snapd
+
       - name: Free disk space
         uses: sbwml/actions@free-disk
 
@@ -54,7 +59,7 @@ jobs:
           ./wrt_core/pre_clone_action.sh ${{ inputs.model }}
 
       - name: Cache Dependencies
-        uses: actions/cache@v5.0.2
+        uses: actions/cache@v5.0.4
         with:
           path: |
             ./action_build/.ccache
@@ -108,7 +113,7 @@ jobs:
           echo "LAN地址: 192.168.10.1" >> release_body.txt
 
       - name: Release Firmware
-        uses: softprops/action-gh-release@v2.5.0
+        uses: softprops/action-gh-release@v2.6.1
         with:
           tag_name: ${{ env.BUILD_DATE }}_${{ inputs.model }}
           files: ${{ inputs.model == 'n1_immwrt' && env.PACKAGED_OUTPUTPATH || './firmware' }}/*.*
