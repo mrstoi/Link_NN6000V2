@@ -9,17 +9,14 @@ remove_unwanted_packages() {
     )
     local packages_net=(
         "haproxy" "xray-core" "xray-plugin" "dns2socks" "alist" "hysteria"
-        "mosdns" "ddns-go" "naiveproxy" "shadowsocks-rust"
+        "adguardhome" "ddns-go" "naiveproxy" "shadowsocks-rust"
         "sing-box" "v2ray-core" "v2ray-geodata" "v2ray-plugin" "tuic-client"
         "chinadns-ng" "ipt2socks" "tcping" "trojan-plus" "simple-obfs" "shadowsocksr-libev"
         "dae" "daed" "mihomo" "geoview" "tailscale" "open-app-filter" "msd_lite"
     )
-    local packages_utils=(
-        "cups"
-    )
     local small8_packages=(
         "ppp" "firewall" "dae" "daed" "daed-next" "libnftnl" "nftables" "dnsmasq" "luci-app-alist"
-        "alist" "opkg" "smartdns" "luci-app-smartdns" "easytier" "webd" "luci-app-natmap"
+        "alist" "opkg" "smartdns" "luci-app-smartdns" "easytier"
     )
 
     for pkg in "${luci_packages[@]}"; do
@@ -34,12 +31,6 @@ remove_unwanted_packages() {
     for pkg in "${packages_net[@]}"; do
         if [[ -d ./feeds/packages/net/$pkg ]]; then
             \rm -rf ./feeds/packages/net/$pkg
-        fi
-    done
-
-    for pkg in "${packages_utils[@]}"; do
-        if [[ -d ./feeds/packages/utils/$pkg ]]; then
-            \rm -rf ./feeds/packages/utils/$pkg
         fi
     done
 
@@ -73,14 +64,12 @@ install_small8() {
     ./scripts/feeds install -p small8 -f xray-core xray-plugin dns2tcp dns2socks haproxy hysteria \
         naiveproxy shadowsocks-rust sing-box v2ray-core v2ray-geodata geoview v2ray-plugin \
         tuic-client chinadns-ng ipt2socks tcping trojan-plus simple-obfs shadowsocksr-libev \
-        v2dat mosdns luci-app-mosdns ddns-go \
+        v2dat adguardhome luci-app-adguardhome ddns-go \
         luci-app-ddns-go taskd luci-lib-xterm luci-lib-taskd luci-app-store quickstart \
         luci-app-quickstart luci-app-istorex luci-app-cloudflarespeedtest netdata luci-app-netdata \
         lucky luci-app-lucky luci-app-openclash luci-app-homeproxy luci-app-amlogic nikki luci-app-nikki \
         tailscale luci-app-tailscale oaf open-app-filter luci-app-oaf easytier luci-app-easytier \
-        msd_lite luci-app-msd_lite cups luci-app-cupsd
-
-    rm -rf ./feeds/small8/luci-app-natmap ./feeds/small8/webd 2>/dev/null
+        msd_lite luci-app-msd_lite
 }
 
 install_passwall() {
@@ -165,6 +154,19 @@ add_timecontrol() {
     fi
 }
 
+update_adguardhome() {
+    local adguardhome_dir="$BUILD_DIR/package/feeds/small8/luci-app-adguardhome"
+    local repo_url="https://github.com/ZqinKing/luci-app-adguardhome.git"
+
+    echo "正在更新 luci-app-adguardhome..."
+    rm -rf "$adguardhome_dir" 2>/dev/null
+
+    if ! git clone --depth 1 "$repo_url" "$adguardhome_dir"; then
+        echo "错误：从 $repo_url 克隆 luci-app-adguardhome 仓库失败" >&2
+        exit 1
+    fi
+}
+
 update_lucky() {
     local lucky_repo_url="https://github.com/gdy666/luci-app-lucky.git"
     local target_small8_dir="$BUILD_DIR/feeds/small8"
@@ -210,9 +212,7 @@ update_lucky() {
     fi
 
     local version
-    local lucky_tarball
-    lucky_tarball=$(find "$BASE_PATH/patches" -name "lucky_*.tar.gz" -printf "%f\n" | head -n 1)
-    version=$(echo "$lucky_tarball" | sed -n 's/^lucky_\(.*\)_Linux.*$/\1/p')
+    version=$(find "$BASE_PATH/patches" -name "lucky_*.tar.gz" -printf "%f\n" | head -n 1 | sed -n 's/^lucky_\(.*\)_Linux.*$/\1/p')
     if [ -z "$version" ]; then
         echo "Warning: 未找到 lucky 补丁文件，跳过更新。" >&2
         return 0
@@ -225,7 +225,7 @@ update_lucky() {
     fi
 
     echo "正在更新 lucky Makefile..."
-    local patch_line="\\t[ -f \$(TOPDIR)/../wrt_core/patches/${lucky_tarball} ] && install -Dm644 \$(TOPDIR)/../wrt_core/patches/${lucky_tarball} \$(PKG_BUILD_DIR)/\$(PKG_NAME)_\$(PKG_VERSION)_Linux_\$(LUCKY_ARCH).tar.gz"
+    local patch_line="\\t[ -f \$(TOPDIR)/../wrt_core/patches/lucky_${version}_Linux_\$(LUCKY_ARCH)_wanji.tar.gz ] && install -Dm644 \$(TOPDIR)/../wrt_core/patches/lucky_${version}_Linux_\$(LUCKY_ARCH)_wanji.tar.gz \$(PKG_BUILD_DIR)/\$(PKG_NAME)_\$(PKG_VERSION)_Linux_\$(LUCKY_ARCH).tar.gz"
 
     if grep -q "Build/Prepare" "$makefile_path"; then
         sed -i "/Build\\/Prepare/a\\$patch_line" "$makefile_path"
@@ -233,6 +233,30 @@ update_lucky() {
         echo "lucky Makefile 更新完成。"
     else
         echo "Warning: lucky Makefile 中未找到 'Build/Prepare'。跳过。" >&2
+    fi
+}
+
+update_smartdns() {
+    local SMARTDNS_REPO="https://github.com/ZqinKing/openwrt-smartdns.git"
+    local SMARTDNS_DIR="$BUILD_DIR/feeds/packages/net/smartdns"
+    local LUCI_APP_SMARTDNS_REPO="https://github.com/pymumu/luci-app-smartdns.git"
+    local LUCI_APP_SMARTDNS_DIR="$BUILD_DIR/feeds/luci/applications/luci-app-smartdns"
+
+    echo "正在更新 smartdns..."
+    rm -rf "$SMARTDNS_DIR"
+    if ! git clone --depth=1 "$SMARTDNS_REPO" "$SMARTDNS_DIR"; then
+        echo "错误：从 $SMARTDNS_REPO 克隆 smartdns 仓库失败" >&2
+        exit 1
+    fi
+
+    install -Dm644 "$BASE_PATH/patches/100-smartdns-optimize.patch" "$SMARTDNS_DIR/patches/100-smartdns-optimize.patch"
+    sed -i '/define Build\/Compile\/smartdns-ui/,/endef/s/CC=\$(TARGET_CC)/CC="\$(TARGET_CC_NOCACHE)"/' "$SMARTDNS_DIR/Makefile"
+
+    echo "正在更新 luci-app-smartdns..."
+    rm -rf "$LUCI_APP_SMARTDNS_DIR"
+    if ! git clone --depth=1 "$LUCI_APP_SMARTDNS_REPO" "$LUCI_APP_SMARTDNS_DIR"; then
+        echo "错误：从 $LUCI_APP_SMARTDNS_REPO 克隆 luci-app-smartdns 仓库失败" >&2
+        exit 1
     fi
 }
 

@@ -34,12 +34,11 @@ set wireless.default_radio${radio}.wnm_sleep_mode_no_keys='1'
 EOF
 }
 
-
 link_nn6000v2_wifi_cfg() {
-	configure_wifi 0 149 HE80 20 '500/5' '147258369'
-	configure_wifi 1 1 HE20 20 '500/5' '147258369'
-    uci set wireless.radio0.disabled='1'
-    uci set wireless.radio1.disabled='1'
+	configure_wifi 0 1 HE20 20 '500/5' '147258369'
+	configure_wifi 1 149 HE80 22 '500/5' '147258369'
+	uci set wireless.radio0.disabled='1'
+	uci set wireless.radio1.disabled='1'
 }
 
 case "${board_name}" in

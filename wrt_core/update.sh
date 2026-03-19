@@ -24,7 +24,7 @@ FEEDS_CONF="feeds.conf.default"
 GOLANG_REPO="https://github.com/sbwml/packages_lang_golang"
 GOLANG_BRANCH="25.x"
 THEME_SET="argon"
-LAN_ADDR="10.0.0.1"
+LAN_ADDR="192.168.10.1"
 
 SCRIPT_DIR=$(cd $(dirname $0) && pwd)
 BASE_PATH=${BASE_PATH:-$SCRIPT_DIR}
@@ -33,7 +33,6 @@ source "$SCRIPT_DIR/modules/general.sh"
 source "$SCRIPT_DIR/modules/feeds.sh"
 source "$SCRIPT_DIR/modules/packages.sh"
 source "$SCRIPT_DIR/modules/system.sh"
-source "$SCRIPT_DIR/modules/cups.sh"
 
 
 main() {
@@ -49,6 +48,8 @@ main() {
     update_golang
     change_dnsmasq2full
     fix_mk_def_depends
+
+    install_libubox_cmake_patch
     update_default_lan_addr
     remove_something_nss_kmod
     update_affinity_script
@@ -73,6 +74,7 @@ main() {
     add_quickfile
     update_lucky
     fix_rust_compile_error
+    update_smartdns
     update_diskman
     update_dockerman
     set_nginx_default_config
@@ -85,13 +87,14 @@ main() {
     remove_attendedsysupgrade
     fix_kconfig_recursive_dependency
     install_feeds
-    fix_cups_libcups_avahi_depends
     fix_easytier_lua
+    update_adguardhome
     update_script_priority
     update_geoip
     fix_openssl_ktls
     fix_opkg_check
     fix_quectel_cm
+    install_pbr_cmcc
     fix_pbr_ip_forward
     update_package "runc" "releases" "v1.3.3"
     update_package "containerd" "releases" "v1.7.28"
