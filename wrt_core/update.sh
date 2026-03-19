@@ -88,7 +88,6 @@ main() {
     fix_kconfig_recursive_dependency
     install_feeds
     fix_easytier_lua
-    update_adguardhome
     update_script_priority
     update_geoip
     fix_openssl_ktls
