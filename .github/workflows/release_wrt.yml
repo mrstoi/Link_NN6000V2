@@ -23,10 +23,12 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Disable snapd refresh
+      - name: Disable snapd
         run: |
-          sudo systemctl stop snapd
-          sudo systemctl disable snapd
+          sudo systemctl stop snapd.service snapd.socket
+          sudo systemctl disable snapd.service snapd.socket
+          sudo apt-get purge -y snapd
+          sudo rm -rf /var/cache/snapd /var/lib/snapd /var/snap /root/snap ~/snap
 
       - name: Free disk space
         uses: sbwml/actions@free-disk
