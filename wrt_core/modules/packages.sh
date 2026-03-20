@@ -16,7 +16,7 @@ remove_unwanted_packages() {
     )
     local small8_packages=(
         "ppp" "firewall" "dae" "daed" "daed-next" "libnftnl" "nftables" "dnsmasq" "luci-app-alist"
-        "alist" "opkg" "smartdns" "luci-app-smartdns" "easytier" "adguardhome" "luci-app-adguardhome"
+        "alist" "opkg" "smartdns" "luci-app-smartdns" "easytier"
     )
 
     for pkg in "${luci_packages[@]}"; do
@@ -64,17 +64,13 @@ install_small8() {
     ./scripts/feeds install -p small8 -f xray-core xray-plugin dns2tcp dns2socks haproxy hysteria \
         naiveproxy shadowsocks-rust sing-box v2ray-core v2ray-geodata geoview v2ray-plugin \
         tuic-client chinadns-ng ipt2socks tcping trojan-plus simple-obfs shadowsocksr-libev \
-        v2dat \
+        v2dat adguardhome luci-app-adguardhome\
         taskd luci-lib-xterm luci-lib-taskd luci-app-store quickstart \
         luci-app-quickstart luci-app-istorex luci-app-cloudflarespeedtest netdata luci-app-netdata \
         lucky luci-app-lucky luci-app-openclash luci-app-homeproxy luci-app-amlogic nikki luci-app-nikki \
         tailscale luci-app-tailscale oaf open-app-filter luci-app-oaf easytier luci-app-easytier \
         msd_lite luci-app-msd_lite
     
-    # 安装 ZqinKing 的 luci-app-adguardhome
-    if [ ! -d "$BUILD_DIR/package/luci-app-adguardhome" ]; then
-        git clone https://github.com/ZqinKing/luci-app-adguardhome.git "$BUILD_DIR/package/luci-app-adguardhome"
-    fi
 }
 
 install_passwall() {
@@ -155,6 +151,19 @@ add_timecontrol() {
     echo "正在添加 luci-app-timecontrol..."
     if ! git clone --depth 1 "$repo_url" "$timecontrol_dir"; then
         echo "错误：从 $repo_url 克隆 luci-app-timecontrol 仓库失败" >&2
+        exit 1
+    fi
+}
+
+update_adguardhome() {
+    local adguardhome_dir="$BUILD_DIR/package/feeds/small8/luci-app-adguardhome"
+    local repo_url="https://github.com/ZqinKing/luci-app-adguardhome.git"
+
+    echo "正在更新 luci-app-adguardhome..."
+    rm -rf "$adguardhome_dir" 2>/dev/null
+
+    if ! git clone --depth 1 "$repo_url" "$adguardhome_dir"; then
+        echo "错误：从 $repo_url 克隆 luci-app-adguardhome 仓库失败" >&2
         exit 1
     fi
 }
