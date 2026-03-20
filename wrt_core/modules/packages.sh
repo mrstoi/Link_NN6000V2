@@ -64,12 +64,17 @@ install_small8() {
     ./scripts/feeds install -p small8 -f xray-core xray-plugin dns2tcp dns2socks haproxy hysteria \
         naiveproxy shadowsocks-rust sing-box v2ray-core v2ray-geodata geoview v2ray-plugin \
         tuic-client chinadns-ng ipt2socks tcping trojan-plus simple-obfs shadowsocksr-libev \
-        v2dat luci-app-adguardhome \
+        v2dat \
         taskd luci-lib-xterm luci-lib-taskd luci-app-store quickstart \
         luci-app-quickstart luci-app-istorex luci-app-cloudflarespeedtest netdata luci-app-netdata \
         lucky luci-app-lucky luci-app-openclash luci-app-homeproxy luci-app-amlogic nikki luci-app-nikki \
         tailscale luci-app-tailscale oaf open-app-filter luci-app-oaf easytier luci-app-easytier \
         msd_lite luci-app-msd_lite
+    
+    # 安装 ZqinKing 的 luci-app-adguardhome
+    if [ ! -d "$BUILD_DIR/package/luci-app-adguardhome" ]; then
+        git clone https://github.com/ZqinKing/luci-app-adguardhome.git "$BUILD_DIR/package/luci-app-adguardhome"
+    fi
 }
 
 install_passwall() {
