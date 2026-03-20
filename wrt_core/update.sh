@@ -48,15 +48,12 @@ main() {
     update_golang
     change_dnsmasq2full
     fix_mk_def_depends
-    # install_libubox_cmake_patch
     update_default_lan_addr
     remove_something_nss_kmod
     update_affinity_script
     update_ath11k_fw
-    # fix_mkpkg_format_invalid
     change_cpuusage
     update_tcping
-    # add_ax6600_led
     set_custom_task
     apply_passwall_tweaks
     update_nss_pbuf_performance
@@ -99,7 +96,6 @@ main() {
     update_package "containerd" "releases" "v1.7.28"
     update_package "docker" "tags" "v28.5.2"
     update_package "dockerd" "releases" "v28.5.2"
-    # apply_hash_fixes
 }
 
 main "$@"
