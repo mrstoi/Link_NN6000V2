@@ -48,7 +48,6 @@ main() {
     update_golang
     change_dnsmasq2full
     fix_mk_def_depends
-
     # install_libubox_cmake_patch
     update_default_lan_addr
     remove_something_nss_kmod
@@ -57,7 +56,7 @@ main() {
     # fix_mkpkg_format_invalid
     change_cpuusage
     update_tcping
-    add_ax6600_led
+    # add_ax6600_led
     set_custom_task
     apply_passwall_tweaks
     update_nss_pbuf_performance
